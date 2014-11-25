@@ -1,2 +1,5 @@
 ---
 # defaults file for ansible-Zoneminder
+# Passwords required for installation
+mysql_root: "XXpGvgd2PYT6Bbe"
+

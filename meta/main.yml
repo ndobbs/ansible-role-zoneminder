@@ -1,8 +1,8 @@
 ---
 galaxy_info:
-  author: your name
-  description: 
-  company: your company (optional)
+  author: Nate Dobbs
+  description: Installs ZoneMinder locally or remotely
+  company: 
   # Some suggested licenses:
   # - BSD (default)
   # - MIT
@@ -10,7 +10,7 @@ galaxy_info:
   # - GPLv3
   # - Apache
   # - CC-BY
-  license: license (GPLv2, CC-BY, etc)
+  license: license (GPLv3, Nate Dobbs )
   min_ansible_version: 1.2
   #
   # Below are all platforms currently available. Just uncomment
@@ -18,12 +18,12 @@ galaxy_info:
   # platform on this list, let us know and we'll get it added!
   #
   #platforms:
-  #- name: EL
-  #  versions:
+  - name: EL
+    versions:
   #  - all
-  #  - 5
-  #  - 6
-  #  - 7
+    - 5
+    - 6
+    - 7
   #- name: GenericUNIX
   #  versions:
   #  - all
@@ -115,7 +115,7 @@ galaxy_info:
   #- networking
   #- packaging
   #- system
-  #- web
+  - web
 dependencies: []
   # List your role dependencies here, one per line. Only
   # dependencies available via galaxy should be listed here.
