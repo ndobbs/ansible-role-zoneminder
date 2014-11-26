@@ -13,5 +13,5 @@
   command: "mysqladmin -uroot -p{{ mysql_root_pwd }}"
 
 - name: prompt_service_address
-  prompt: 
+  debug:
          msg="ZoneMinder configuration complete, please visit http://{{ ansible_fqdn }} to customize your install"
