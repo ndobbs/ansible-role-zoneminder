@@ -1,2 +1,9 @@
 ---
 # tasks file for ansible-Zoneminder
+- include: packages.yml
+- include: zmrepo.yml
+- include: zmconfig.yml
+- include: mysql_config.yml
+- include: phpconfig.yml
+- include: httpdconfig.yml
+- include: service_status.yml
