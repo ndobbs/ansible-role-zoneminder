@@ -14,4 +14,4 @@
 
 - name: prompt_service_address
   debug:
-         msg="ZoneMinder configuration complete, please visit http://{{ ansible_fqdn }} to customize your install"
+         msg="ZoneMinder configuration complete, please visit http://{{ ansible_fqdn }}/zm to customize your install"
