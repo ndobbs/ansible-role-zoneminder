@@ -1,0 +1,14 @@
+---
+# This playbook simply ensures everything is up and running properly
+# by this point the entire system should be ready come up live
+
+- name: starting zoneminder services
+  service: 
+          name={{ item }}
+          state=running
+          enabled=yes
+  with_items:
+     - httpd
+     - zoneminder
+  notify: prompt_service_address
+
