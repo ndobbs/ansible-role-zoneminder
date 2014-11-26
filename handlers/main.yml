@@ -1,2 +1,17 @@
 ---
 # handlers file for ansible-Zoneminder
+
+- name: start_mysql
+  service: 
+          name=mysqld
+          state=started
+
+- name: secure_mysql
+  command: "/root/mysql_secure"
+
+- name: reload_mysql_privs
+  command: "mysqladmin -uroot -p{{ mysql_root_pwd }}"
+
+- name: prompt_service_address
+  prompt: 
+         msg="ZoneMinder configuration complete, please visit http://{{ ansible_fqdn }} to customize your install"
