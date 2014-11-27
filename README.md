@@ -1,10 +1,12 @@
 Role Name
 =========
-
-ndobbs.ansible-ZoneMinder
+# Ansible Role: zoneminder
+ndobbs.ansible-role-zoneminder
 
 Requirements
 ------------
+
+If you are not famialiar with ansible or not using a 'role' file structure: ( http://docs.ansible.com/playbooks_best_practices.html#directory-layout )
 
 Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
 
@@ -29,10 +31,16 @@ Including an example of how to use your role (for instance, with variables passe
 
 License
 -------
+GPL (v.3)
 
-BSD
+
+TODO
+------------------
+Add SSL configuration support
+Add support for RHEL 7
+Add support for debian distros
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This Ansible role was created by Nate Dobbs in 2014.
