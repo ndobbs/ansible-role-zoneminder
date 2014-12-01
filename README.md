@@ -6,7 +6,7 @@ ndobbs.ansible-role-zoneminder
 Requirements
 ------------
 
-If you are not famialiar with ansible or not using a 'role' file structure: ( http://docs.ansible.com/playbooks_best_practices.html#directory-layout )
+If you are not familiar with ansible or not using a 'role' file structure: ( http://docs.ansible.com/playbooks_best_practices.html#directory-layout )
 
 Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
 
