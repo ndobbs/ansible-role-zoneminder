@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Nate Dobbs
-  description: Installs ZoneMinder locally or remotely
+  description: ZoneMinder role for ansible
   company: 
   # Some suggested licenses:
   # - BSD (default)
@@ -10,7 +10,7 @@ galaxy_info:
   # - GPLv3
   # - Apache
   # - CC-BY
-  license: license (GPLv3, Nate Dobbs )
+  license: license (BSD, Nate Dobbs )
   min_ansible_version: 1.2
   #
   # Below are all platforms currently available. Just uncomment
