@@ -1,6 +1,5 @@
 Role Name
 =========
-# Ansible Role: zoneminder
 ndobbs.ansible-role-zoneminder
 
 Requirements
@@ -31,8 +30,7 @@ Including an example of how to use your role (for instance, with variables passe
 
 License
 -------
-GPL (v.3)
-
+BSD
 
 TODO
 ------------------
