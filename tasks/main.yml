@@ -1,6 +1,11 @@
 ---
 # tasks file for ansible-Zoneminder
-- include: packages.yml
+- name: yum | Installing required packages to system
+  yum: name=pip state=latest
+
+- name: python-pip | Installing required packages for mysql user and db modules
+  pip: name=mysql-python state=latest
+  
 - include: zmrepo.yml
 - include: zmconfig.yml
 - include: mysql_config.yml

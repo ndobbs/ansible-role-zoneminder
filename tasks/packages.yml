@@ -1,8 +1,0 @@
----
-# Install required packages to system before configuring for ZM
-- name: yum | Installing required packages to system
-  yum: name=pip state=latest
-
-- name: python-pip | Installing required packages for mysql user and db modules
-  pip: name=mysql-python state=latest
-...
