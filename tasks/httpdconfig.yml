@@ -4,8 +4,5 @@
 # resulting in a running version of httpd accessible from anywhere
 
 - name: editing zoneminders httpd config file
-  lineinfile: 
-             dest=/etc/httpd/conf.d/zoneminder.conf
-             state=absent
-             regexp='^Deny\s+from\s+all'
+  lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
 ...

@@ -5,19 +5,13 @@
 #   * Currently only supports EL6.x distros ( zmrepo limitation )
 
 - name: installing ZoneMinder
-  yum:
-      name=zoneminder
-      state=latest
-  # In order to configure mysql, it needs to be running! 
-  # Only start mysql if the status of zoneminder install is changed
+  yum: name=zoneminder state=latest
   notify: start_mysql
 
 - name: ensuring all required ZM services are enabled at boot
-  service:
-          name:{{ item }}
-          enabled=yes
+  service: name="{{ item }}" enabled=yes
   with_items:
-      - mysqld
-      - zoneminder
-      - httpd
+    - mysqld
+    - zoneminder
+    - httpd
 ...
