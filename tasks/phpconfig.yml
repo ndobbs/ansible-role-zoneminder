@@ -9,3 +9,4 @@
            dest=/etc/php.ini
            regexp=";date.timezone"
            line="date.timezone = {{ date_timezone }}" 
+...

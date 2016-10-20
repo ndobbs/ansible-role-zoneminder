@@ -8,3 +8,4 @@
              dest=/etc/httpd/conf.d/zoneminder.conf
              state=absent
              regexp='^Deny\s+from\s+all'
+...
