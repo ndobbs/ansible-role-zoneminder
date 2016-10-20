@@ -90,5 +90,10 @@
 - name: editing zoneminders httpd config file
   lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
   
-- include: service_status.yml
+- name: starting zoneminder services
+  service: name={{ item }} state=running enabled=yes
+  with_items:
+     - httpd
+     - zoneminder
+  notify: prompt_service_address
 ...
