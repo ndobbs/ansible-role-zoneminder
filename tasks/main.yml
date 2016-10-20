@@ -26,7 +26,59 @@
     - zoneminder
     - httpd
 
-- include: mysql_config.yml
+- name: checking to see if mysql is started
+  service: name=mysqld state=running
+
+- name: copying mysql_secure script to host
+  template: > 
+    src=secure_mysql.j2
+    dest=/root/secure_mysql
+    owner=root
+    group=root
+    mode=0755
+  notify: secure_mysql
+
+- name: creating ZoneMinder (zm) database
+  mysql_db: login_user=root login_password={{ mysql_root_pwd }} name=zm state=present
+
+- name: creating ZoneMinder user and granting perms
+  mysql_user: >
+    login_user=root
+    login_password={{ mysql_root_pwd }}
+    name={{ zm_db_user }}
+    password={{ zm_db_password }}
+    priv="*.*:select,insert,update,delete,lock tables,alter"
+    state=present
+
+- name: executing sql script on zm database
+  mysql_db: >
+    login_user=root
+    login_password={{ mysql_root_pwd }}
+    name=zm
+    state=import
+    target=/usr/share/zoneminder/db/zm_create.sql
+  notify: reload_mysql_privs
+
+- name: updating custom credentials for /etc/zm.conf
+  # -------------------------------------------------------------------------------------
+  # BEGIN '>' SPECIAL-HANDLING
+  # -------------------------------------------------------------------------------------
+  # This causes the block following the ">" to be interpreted as a YAML scalar, and hence,
+  # ignores other YAML special characters
+  lineinfile: > 
+    state=present
+    backrefs=yes           
+    dest=/etc/zm.conf
+    regexp="{{ item.expr }}"
+    line="{{ item.mod }}"
+  with_items:
+    - name: "Replace contents: user"
+      expr: "ZM_DB_USER="
+      mod: "ZM_DB_USER={{ zm_db_user }}"
+    - name: "Replace contents: password"
+      expr: "ZM_DB_PASS="
+      mod: "ZM_DB_PASS={{ zm_db_password }}"
+
 - include: phpconfig.yml
 - include: httpdconfig.yml
 - include: service_status.yml
