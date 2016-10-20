@@ -87,6 +87,8 @@
     regexp=";date.timezone"
     line="date.timezone = {{ date_timezone }}" 
 
-- include: httpdconfig.yml
+- name: editing zoneminders httpd config file
+  lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
+  
 - include: service_status.yml
 ...
