@@ -15,7 +15,17 @@
        state=latest
   when: ansible_os_family == "RedHat"
 
-- include: zmconfig.yml
+- name: installing ZoneMinder
+  yum: name=zoneminder state=latest
+  notify: start_mysql
+
+- name: ensuring all required ZM services are enabled at boot
+  service: name="{{ item }}" enabled=yes
+  with_items:
+    - mysqld
+    - zoneminder
+    - httpd
+
 - include: mysql_config.yml
 - include: phpconfig.yml
 - include: httpdconfig.yml
