@@ -1,21 +1,21 @@
 ---
 # tasks file for ansible-Zoneminder
-- name: installing zmrepo 
+- name: "ZoneMinder | yum | ensure zmrepo"
   yum: name="{{ zmrepo_url_el6 }}" disable_gpg_check=yes state=latest
   when: ansible_pkg_mgr == 'yum'
 
-- name: installing ZoneMinder
+- name: "ZoneMinder | yum | ensure ZoneMinder binary"
   yum: name=zoneminder state=latest
   notify: start_mysql
 
-- name: ensuring all required ZM services are enabled at boot
+- name: "ZoneMinder | all | ensure dependent services enabled at boot"
   service: name="{{ item }}" enabled=yes
   with_items: ['mysqld', 'zoneminder', 'httpd']
 
-- name: checking to see if mysql is started
+- name: "ZoneMinder | all | ensure mysql running"
   service: name=mysqld state=running
 
-- name: copying mysql_secure script to host
+- name: "ZoneMinder | all | ensure templated mysql_secure script"
   template: > 
     src=secure_mysql.j2
     dest=/root/secure_mysql
@@ -24,10 +24,10 @@
     mode=0755
   notify: secure_mysql
 
-- name: creating ZoneMinder (zm) database
+- name: "ZoneMinder | all | ensure mysql database"
   mysql_db: login_user=root login_password={{ mysql_root_pwd }} name=zm state=present
 
-- name: creating ZoneMinder user and granting perms
+- name: "ZoneMinder | all | ensure mysql user & permissions"
   mysql_user: >
     login_user=root
     login_password={{ mysql_root_pwd }}
@@ -36,7 +36,7 @@
     priv="*.*:select,insert,update,delete,lock tables,alter"
     state=present
 
-- name: executing sql script on zm database
+- name: "ZoneMinder | all | ensure executed mysql creation script"
   mysql_db: >
     login_user=root
     login_password={{ mysql_root_pwd }}
@@ -45,7 +45,7 @@
     target=/usr/share/zoneminder/db/zm_create.sql
   notify: reload_mysql_privs
 
-- name: updating custom credentials for /etc/zm.conf
+- name: "ZoneMinder | all | ensure ZoneMinder credentials"
   lineinfile: > 
     state=present
     backrefs=yes           
@@ -60,7 +60,7 @@
       expr: "ZM_DB_PASS="
       mod: "ZM_DB_PASS={{ zm_db_password }}"
 
-- name: modifying php to support local_machine timezone configuration
+- name: "ZoneMinder | all | ensure configured php timezone"
   lineinfile: >
     state=present
     backrefs=yes
@@ -68,10 +68,10 @@
     regexp=";date.timezone"
     line="date.timezone = {{ date_timezone }}" 
 
-- name: editing zoneminders httpd config file
+- name: "ZoneMinder | all | ensure configured httpd"
   lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
   
-- name: starting zoneminder services
+- name: "ZoneMinder | all ensure zoneminder & webserver services running & enabled"
   service: name={{ item }} state=running enabled=yes
   with_items: ['httpd', 'zoneminder']
   notify: prompt_service_address
