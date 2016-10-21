@@ -44,7 +44,6 @@
     name=zm
     state=import
     target=/usr/share/zoneminder/db/zm_create.sql
-  notify: reload_mysql_privs
 
 - name: "ZoneMinder | all | ensure ZoneMinder credentials"
   lineinfile: > 
