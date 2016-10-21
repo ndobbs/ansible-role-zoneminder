@@ -49,11 +49,6 @@
   notify: reload_mysql_privs
 
 - name: updating custom credentials for /etc/zm.conf
-  # -------------------------------------------------------------------------------------
-  # BEGIN '>' SPECIAL-HANDLING
-  # -------------------------------------------------------------------------------------
-  # This causes the block following the ">" to be interpreted as a YAML scalar, and hence,
-  # ignores other YAML special characters
   lineinfile: > 
     state=present
     backrefs=yes           
