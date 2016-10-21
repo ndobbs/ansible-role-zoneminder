@@ -1,13 +1,8 @@
 ---
 # tasks file for ansible-Zoneminder
-# zmrepo negates the need for EPEL and RPMFusion
-# ref: http://www.zoneminder.com/wiki/index.php/CentOS#Zmrepo_-_A_ZoneMinder_repository_for_RPM_based_distros
 - name: installing zmrepo 
-  local_action: yum
-       name={{ zmrepo_url_el6 }}
-       disable_gpg_check=yes 
-       state=latest
-  when: ansible_os_family == "RedHat"
+  yum: name="{{ zmrepo_url_el6 }}" disable_gpg_check=yes state=latest
+  when: ansible_pkg_mgr == 'yum'
 
 - name: installing ZoneMinder
   yum: name=zoneminder state=latest
