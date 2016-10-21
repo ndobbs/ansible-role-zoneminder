@@ -6,6 +6,7 @@
 
 - name: "ZoneMinder | yum | ensure ZoneMinder binary"
   yum: name=zoneminder state=latest
+  when: ansible_pkg_mgr == 'yum'
   notify: start_mysql
 
 - name: "ZoneMinder | all | ensure dependent services enabled at boot"
