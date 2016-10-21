@@ -18,5 +18,5 @@ zmrepo_url_el6: "http://zmrepo.connortechnology.com/el/{{ ansible_distribution_m
 # Timezone information
 # A proper install requires /etc/php.ini configuration
 # This role will assume you are gathering facts and will set date.timezone based upon machine configuration
-date_timezone: "{{ ansible_date_time[0].tz }}"
+date_timezone: "{{ ansible_date_time.tz }}"
 ...
