@@ -10,10 +10,7 @@
 
 - name: ensuring all required ZM services are enabled at boot
   service: name="{{ item }}" enabled=yes
-  with_items:
-    - mysqld
-    - zoneminder
-    - httpd
+  with_items: ['mysqld', 'zoneminder', 'httpd']
 
 - name: checking to see if mysql is started
   service: name=mysqld state=running
@@ -76,8 +73,6 @@
   
 - name: starting zoneminder services
   service: name={{ item }} state=running enabled=yes
-  with_items:
-     - httpd
-     - zoneminder
+  with_items: ['httpd', 'zoneminder']
   notify: prompt_service_address
 ...
