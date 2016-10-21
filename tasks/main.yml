@@ -1,11 +1,5 @@
 ---
 # tasks file for ansible-Zoneminder
-- name: yum | Installing required packages to system
-  yum: name=pip state=latest
-
-- name: python-pip | Installing required packages for mysql user and db modules
-  pip: name=mysql-python state=latest
-
 # zmrepo negates the need for EPEL and RPMFusion
 # ref: http://www.zoneminder.com/wiki/index.php/CentOS#Zmrepo_-_A_ZoneMinder_repository_for_RPM_based_distros
 - name: installing zmrepo 
