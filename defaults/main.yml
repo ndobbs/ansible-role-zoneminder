@@ -13,7 +13,7 @@ zm_db_password: "REewebgntXMvKwA"
 #   * CentOS 6.x
  
 # zmrepo install URL
-zmrepo_url_el6: "http://zmrepo.connortechnology.com/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}"
+zm_yum_repo_url: "http://zmrepo.zoneminder.com/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}"
 
 # Timezone information
 # A proper install requires /etc/php.ini configuration
