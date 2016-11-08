@@ -12,39 +12,41 @@ Role Variables
 --------------
 
 ```yaml
-# Passwords required for installation
-mysql_root_pwd: "root"
-
+# ansible-role-zoneminder/defaults/main.yml
+# ---
 # Zoneminder db credentials
+zm_db_root_password: "root"
 zm_db_user: "zmuser"
 zm_db_user_password: "zmpass"
 
-# zmrepo variables
-# currently only supports EL6.x OS'
-#   * RHEL 6.x
-#   * CentOS 6.x
- 
 # zmrepo install URL
-zmrepo_url_el6: "http://zmrepo.connortechnology.com/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}"
+zm_yum_repo_url: "http://zmrepo.zoneminder.com/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}"
 
 # Timezone information
 # A proper install requires /etc/php.ini configuration
 # This role will assume you are gathering facts and will set date.timezone based upon machine configuration
 date_timezone: "{{ ansible_date_time.tz }}"
+
+
+# ansible-role-zoneminder/vars/main.yml
+# ---
+# Create maps of options that differ by EL version
+zm_db_options: 
+  6: "mysqld"
+  7: "mariadb"
+zm_path_conf_options:
+  6: "/etc/zm.conf"
+  7: "/etc/zm/zm.conf"
+
+# Populate values from options maps
+zm_db: "{{ zm_db_options[ansible_distribution_major_version] }}"
+zm_path_conf: "{{ zm_path_conf_options[ansible_distribution_major_version] }}"
 ```
 
 Dependencies
 ------------
 
-```yaml
-# .requirements.yml
-- name: ansible-role-apache
-  src: geerlingguy.apache
-- name: ansible-role-mysql
-  src: geerlingguy.mysql
-- name: ansible-role-php
-  src: geerlingguy.php
-```
+None.
 
 Example Playbook
 ----------------
@@ -52,12 +54,6 @@ Example Playbook
 ```yaml
 - hosts: all
   roles:
-    - name: "Ensure Apache httpd"
-      role: ansible-role-apache
-    - name: "Ensure MySQL"
-      role: ansible-role-mysql
-    - name: "Ensure PHP"
-      role: ansible-role-php
     - name: "Ensure ZoneMinder"
       role: ndobbs.ansible-role-zoneminder
 ```
@@ -69,7 +65,6 @@ BSD
 TODO
 ------------------
 Add SSL configuration support
-Add support for RHEL 7
 Add support for debian distros
 
 Author Information

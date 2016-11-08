@@ -69,8 +69,8 @@
     regexp=";date.timezone"
     line="date.timezone = {{ date_timezone }}" 
 
-# - name: "ZoneMinder | all | ensure configured httpd"
-#   lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
+- name: "ZoneMinder | all | ensure configured httpd"
+  lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
   
 - name: "ZoneMinder | EL7 | ensure not enforcing selinux"
   selinux: state=disabled
