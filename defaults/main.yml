@@ -1,7 +1,7 @@
 ---
 # defaults file for ansible-Zoneminder
 # Passwords required for installation
-mysql_root_pwd: "XXpGvgd2PYT6Bbe"
+mysql_root_pwd: "root"
 
 # Zoneminder db credentials
 zm_db_user: "zmuser"
@@ -13,10 +13,10 @@ zm_db_password: "REewebgntXMvKwA"
 #   * CentOS 6.x
  
 # zmrepo install URL
-zmrepo_url_el6: "http://zmrepo.connortechnology.com/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/zmrepo-6-4.el6.noarch.rpm"
+zmrepo_url_el6: "http://zmrepo.connortechnology.com/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}"
 
 # Timezone information
 # A proper install requires /etc/php.ini configuration
 # This role will assume you are gathering facts and will set date.timezone based upon machine configuration
-date_timezone: "{{ ansible_date_time[0].tz }}"
+date_timezone: "{{ ansible_date_time.tz }}"
 ...

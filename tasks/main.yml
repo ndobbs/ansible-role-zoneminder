@@ -1,12 +1,13 @@
 ---
 # tasks file for ansible-Zoneminder
 - name: "ZoneMinder | yum | ensure zmrepo"
-  yum: name="{{ zmrepo_url_el6 }}" disable_gpg_check=yes state=latest
+  yum_repository: name="zmrepo" description="zmrepo" baseurl="{{ zmrepo_url_el6 }}" gpgcheck=no
   when: ansible_pkg_mgr == 'yum'
 
 - name: "ZoneMinder | yum | ensure ZoneMinder binary"
-  yum: name=zoneminder state=latest
+  yum: name="{{ item }}" state=latest
   when: ansible_pkg_mgr == 'yum'
+  with_items: ['zmrepo', 'zoneminder']
   notify: start_mysql
 
 - name: "ZoneMinder | all | ensure dependent services enabled at boot"
@@ -44,7 +45,6 @@
     name=zm
     state=import
     target=/usr/share/zoneminder/db/zm_create.sql
-  notify: reload_mysql_privs
 
 - name: "ZoneMinder | all | ensure ZoneMinder credentials"
   lineinfile: > 
