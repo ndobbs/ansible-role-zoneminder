@@ -1,11 +1,9 @@
+# ansible-role-zoneminder/defaults/main.yml
 ---
-# defaults file for ansible-Zoneminder
-# Passwords required for installation
-mysql_root_pwd: "root"
-
 # Zoneminder db credentials
+zm_db_root_password: "root"
 zm_db_user: "zmuser"
-zm_db_password: "REewebgntXMvKwA"
+zm_db_user_password: "REewebgntXMvKwA"
 
 # zmrepo variables
 # currently only supports EL6.x OS'

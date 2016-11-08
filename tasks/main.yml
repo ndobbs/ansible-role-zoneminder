@@ -26,22 +26,22 @@
     mode=0755
   notify: secure_mysql
 
-- name: "ZoneMinder | all | ensure mysql database"
-  mysql_db: login_user=root login_password="{{ mysql_root_pwd }}" name=zm state=present
+- name: "ZoneMinder | all | ensure mysql db"
+  mysql_db: login_user=root login_password="{{ zm_db_root_password }}" name=zm state=present
 
 - name: "ZoneMinder | all | ensure mysql user & permissions"
   mysql_user: >
     login_user=root
-    login_password="{{ mysql_root_pwd }}"
+    login_password="{{ zm_db_root_password }}"
     name="{{ zm_db_user }}"
-    password="{{ zm_db_password }}"
+    password="{{ zm_db_user_password }}"
     priv="*.*:select,insert,update,delete,lock tables,alter"
     state=present
 
 - name: "ZoneMinder | all | ensure executed mysql creation script"
   mysql_db: >
     login_user=root
-    login_password="{{ mysql_root_pwd }}"
+    login_password="{{ zm_db_root_password }}"
     name=zm
     state=import
     target=/usr/share/zoneminder/db/zm_create.sql
@@ -59,7 +59,7 @@
       mod: "ZM_DB_USER={{ zm_db_user }}"
     - name: "Replace contents: password"
       expr: "ZM_DB_PASS="
-      mod: "ZM_DB_PASS={{ zm_db_password }}"
+      mod: "ZM_DB_PASS={{ zm_db_user_password }}"
 
 - name: "ZoneMinder | all | ensure configured php timezone"
   lineinfile: >
