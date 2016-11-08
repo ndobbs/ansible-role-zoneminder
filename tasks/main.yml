@@ -8,14 +8,14 @@
   yum: name="{{ item }}" state=latest
   when: ansible_pkg_mgr == 'yum'
   with_items: ['zmrepo', 'zoneminder']
-  notify: start_mysql
+  notify: start_db
 
 - name: "ZoneMinder | all | ensure dependent services enabled at boot"
   service: name="{{ item }}" enabled=yes
-  with_items: ['mysqld', 'zoneminder', 'httpd']
+  with_items: ['{{ zm_db }}', 'zoneminder', 'httpd']
 
-- name: "ZoneMinder | all | ensure mysql running"
-  service: name=mysqld state=running
+- name: "ZoneMinder | all | ensure db running"
+  service: name="{{ zm_db }}" state=running
 
 - name: "ZoneMinder | all | ensure templated mysql_secure script"
   template: > 
@@ -24,12 +24,12 @@
     owner=root
     group=root
     mode=0755
-  notify: secure_mysql
+  notify: secure_db
 
-- name: "ZoneMinder | all | ensure mysql db"
+- name: "ZoneMinder | all | ensure db"
   mysql_db: login_user=root login_password="{{ zm_db_root_password }}" name=zm state=present
 
-- name: "ZoneMinder | all | ensure mysql user & permissions"
+- name: "ZoneMinder | all | ensure db user & permissions"
   mysql_user: >
     login_user=root
     login_password="{{ zm_db_root_password }}"
@@ -38,7 +38,7 @@
     priv="*.*:select,insert,update,delete,lock tables,alter"
     state=present
 
-- name: "ZoneMinder | all | ensure executed mysql creation script"
+- name: "ZoneMinder | all | ensure executed db creation script"
   mysql_db: >
     login_user=root
     login_password="{{ zm_db_root_password }}"
@@ -50,7 +50,7 @@
   lineinfile: > 
     state=present
     backrefs=yes           
-    dest=/etc/zm.conf
+    dest="{{ zm_path_conf }}"
     regexp="{{ item.expr }}"
     line="{{ item.mod }}"
   with_items:

@@ -1,9 +1,9 @@
 # ansible-role-zoneminder/handlers/main.yml
 ---
-- name: start_mysql
-  service: name=mysqld state=started
+- name: start_db
+  service: name="{{ zm_db }}" state=started
 
-- name: secure_mysql
+- name: secure_db
   command: "/root/mysql_secure"
 
 - name: prompt_service_address
