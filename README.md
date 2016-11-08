@@ -17,7 +17,7 @@ mysql_root_pwd: "root"
 
 # Zoneminder db credentials
 zm_db_user: "zmuser"
-zm_db_password: "REewebgntXMvKwA"
+zm_db_user_password: "zmpass"
 
 # zmrepo variables
 # currently only supports EL6.x OS'
