@@ -4,10 +4,10 @@
   yum_repository: name="zmrepo" description="zmrepo" baseurl="{{ zm_yum_repo_url }}" gpgcheck=no
   when: ansible_pkg_mgr == 'yum'
 
-- name: "ZoneMinder | yum | ensure ZoneMinder binary"
+- name: "ZoneMinder | yum | ensure ZoneMinder binaries"
   yum: name="{{ item }}" state=latest
   when: ansible_pkg_mgr == 'yum'
-  with_items: ['zmrepo', 'zoneminder']
+  with_items: ['zmrepo', 'zoneminder', 'MySQL-python', 'mod_ssl']
   notify: start_db
 
 - name: "ZoneMinder | all | ensure dependent services enabled at boot"
@@ -69,8 +69,8 @@
     regexp=";date.timezone"
     line="date.timezone = {{ date_timezone }}" 
 
-- name: "ZoneMinder | all | ensure configured httpd"
-  lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
+# - name: "ZoneMinder | all | ensure configured httpd"
+#   lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
   
 - name: "ZoneMinder | EL7 | ensure not enforcing selinux"
   selinux: state=disabled
