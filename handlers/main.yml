@@ -1,10 +1,7 @@
+# ansible-role-zoneminder/handlers/main.yml
 ---
-# handlers file for ansible-Zoneminder
-- name: start_mysql
-  service: name=mysqld state=started
-
-- name: secure_mysql
-  command: "/root/mysql_secure"
+- name: start_db
+  service: name="{{ zm_db }}" state=started
 
 - name: prompt_service_address
   debug: msg="ZoneMinder configuration complete, please visit http://{{ ansible_fqdn }}/zm to customize your install"
