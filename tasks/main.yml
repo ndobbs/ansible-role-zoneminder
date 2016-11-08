@@ -7,7 +7,7 @@
 - name: "ZoneMinder | yum | ensure ZoneMinder binaries"
   yum: name="{{ item }}" state=latest
   when: ansible_pkg_mgr == 'yum'
-  with_items: ['zmrepo', 'zoneminder', 'MySQL-python', 'mod_ssl']
+  with_items: ['zmrepo', 'zoneminder', 'mod_ssl', 'MySQL-python', 'libselinux-python']
   notify: start_db
 
 - name: "ZoneMinder | all | ensure dependent services enabled at boot"
@@ -82,7 +82,7 @@
   selinux: state=disabled
   when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
 
-- name: "ZoneMinder | all ensure zoneminder & webserver services running & enabled"
+- name: "ZoneMinder | all | ensure zoneminder & webserver services running & enabled"
   service: name="{{ item }}" state=running enabled=yes
   with_items: ['httpd', 'zoneminder']
   notify: prompt_service_address
