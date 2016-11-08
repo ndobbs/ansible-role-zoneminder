@@ -1,5 +1,5 @@
+# ansible-role-zoneminder/tasks/main.yml
 ---
-# tasks file for ansible-Zoneminder
 - name: "ZoneMinder | yum | ensure zmrepo"
   yum_repository: name="zmrepo" description="zmrepo" baseurl="{{ zm_yum_repo_url }}" gpgcheck=no
   when: ansible_pkg_mgr == 'yum'
