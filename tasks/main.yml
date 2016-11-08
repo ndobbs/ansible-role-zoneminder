@@ -37,6 +37,7 @@
     password="{{ zm_db_user_password }}"
     priv="*.*:select,insert,update,delete,lock tables,alter"
     state=present
+  register: zm_db_user_created
 
 - name: "ZoneMinder | all | ensure executed db creation script"
   mysql_db: >
@@ -45,6 +46,7 @@
     name=zm
     state=import
     target=/usr/share/zoneminder/db/zm_create.sql
+  when: zm_db_user_created.changed
 
 - name: "ZoneMinder | all | ensure ZoneMinder credentials"
   lineinfile: > 
