@@ -72,6 +72,10 @@
 - name: "ZoneMinder | all | ensure configured httpd"
   lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
   
+- name: "ZoneMinder | EL7 | ensure not enforcing selinux"
+  selinux: state=disabled
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+
 - name: "ZoneMinder | all ensure zoneminder & webserver services running & enabled"
   service: name="{{ item }}" state=running enabled=yes
   with_items: ['httpd', 'zoneminder']
