@@ -1,9 +1,89 @@
+# ansible-role-zoneminder/tasks/main.yml
 ---
-# tasks file for ansible-Zoneminder
-- include: packages.yml
-- include: zmrepo.yml
-- include: zmconfig.yml
-- include: mysql_config.yml
-- include: phpconfig.yml
-- include: httpdconfig.yml
-- include: service_status.yml
+- name: "ZoneMinder | yum | ensure zmrepo"
+  yum_repository: name="zmrepo" description="zmrepo" baseurl="{{ zm_yum_repo_url }}" gpgcheck=no
+  when: ansible_pkg_mgr == 'yum'
+
+- name: "ZoneMinder | yum | ensure ZoneMinder binaries"
+  yum: name="{{ item }}" state=latest
+  when: ansible_pkg_mgr == 'yum'
+  with_items: ['zmrepo', 'zoneminder', 'mod_ssl', 'MySQL-python', 'libselinux-python']
+  notify: start_db
+
+- name: "ZoneMinder | all | ensure dependent services enabled at boot"
+  service: name="{{ item }}" enabled=yes
+  with_items: ['{{ zm_db }}', 'zoneminder', 'httpd']
+
+- name: "ZoneMinder | all | ensure db running"
+  service: name="{{ zm_db }}" state=running
+
+- name: "ZoneMinder | all | ensure templated secure_mysql"
+  template: > 
+    src=secure_mysql.j2
+    dest=/root/secure_mysql
+    owner=root
+    group=root
+    mode=0755
+  register: secure_db
+
+- name: "ZoneMinder | all | ensure db credentials"
+  command: "/root/secure_mysql"
+  when: secure_db.changed
+
+- name: "ZoneMinder | all | ensure db"
+  mysql_db: login_user=root login_password="{{ zm_db_root_password }}" name=zm state=present
+
+- name: "ZoneMinder | all | ensure db user & permissions"
+  mysql_user: >
+    login_user=root
+    login_password="{{ zm_db_root_password }}"
+    name="{{ zm_db_user }}"
+    password="{{ zm_db_user_password }}"
+    priv="*.*:select,insert,update,delete,lock tables,alter"
+    state=present
+  register: zm_db_user_created
+
+- name: "ZoneMinder | all | ensure executed db creation script"
+  mysql_db: >
+    login_user=root
+    login_password="{{ zm_db_root_password }}"
+    name=zm
+    state=import
+    target=/usr/share/zoneminder/db/zm_create.sql
+  when: zm_db_user_created.changed
+
+- name: "ZoneMinder | all | ensure ZoneMinder credentials"
+  lineinfile: > 
+    state=present
+    backrefs=yes           
+    dest="{{ zm_path_conf }}"
+    regexp="{{ item.expr }}"
+    line="{{ item.mod }}"
+  with_items:
+    - name: "Replace contents: user"
+      expr: "ZM_DB_USER="
+      mod: "ZM_DB_USER={{ zm_db_user }}"
+    - name: "Replace contents: password"
+      expr: "ZM_DB_PASS="
+      mod: "ZM_DB_PASS={{ zm_db_user_password }}"
+
+- name: "ZoneMinder | all | ensure configured php timezone"
+  lineinfile: >
+    state=present
+    backrefs=yes
+    dest=/etc/php.ini
+    regexp=";date.timezone"
+    line="date.timezone = {{ date_timezone }}" 
+
+- name: "ZoneMinder | all | ensure configured httpd"
+  lineinfile: dest=/etc/httpd/conf.d/zoneminder.conf state=absent regexp='^Deny\s+from\s+all'
+  
+- name: "ZoneMinder | EL7 | ensure not enforcing selinux"
+  selinux: state=disabled
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+
+- name: "ZoneMinder | all | ensure zoneminder & webserver services running & enabled"
+  service: name="{{ item }}" state=running enabled=yes
+  with_items: ['httpd', 'zoneminder']
+  notify: prompt_service_address
+...

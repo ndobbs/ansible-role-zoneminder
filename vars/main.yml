@@ -1,2 +1,16 @@
+# ansible-role-zoneminder/vars/main.yml
 ---
-# vars file for ansible-Zoneminder
+zm_option: "EL{{ ansible_distribution_major_version }}"
+
+# Create maps of options that differ by EL version
+zm_db_options: 
+  EL6: "mysqld"
+  EL7: "mariadb"
+zm_path_conf_options:
+  EL6: "/etc/zm.conf"
+  EL7: "/etc/zm/zm.conf"
+
+# Populate values from options maps
+zm_db: "{{ zm_db_options[zm_option] }}"
+zm_path_conf: "{{ zm_path_conf_options[zm_option] }}"
+...

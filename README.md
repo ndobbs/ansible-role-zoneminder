@@ -1,32 +1,62 @@
-Role Name
-=========
 ndobbs.ansible-role-zoneminder
+=========
+
+Installs & configures ZoneMinder on EL.
 
 Requirements
 ------------
 
-If you are not familiar with ansible or not using a 'role' file structure: ( http://docs.ansible.com/playbooks_best_practices.html#directory-layout )
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+None
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+# ansible-role-zoneminder/defaults/main.yml
+# ---
+# Zoneminder db credentials
+zm_db_root_password: "root"
+zm_db_user: "zmuser"
+zm_db_user_password: "zmpass"
+
+# zmrepo install URL
+zm_yum_repo_url: "http://zmrepo.zoneminder.com/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}"
+
+# Timezone information
+# A proper install requires /etc/php.ini configuration
+# This role will assume you are gathering facts and will set date.timezone based upon machine configuration
+date_timezone: "{{ ansible_date_time.tz }}"
+
+
+# ansible-role-zoneminder/vars/main.yml
+# ---
+# Create maps of options that differ by EL version
+zm_db_options: 
+  6: "mysqld"
+  7: "mariadb"
+zm_path_conf_options:
+  6: "/etc/zm.conf"
+  7: "/etc/zm/zm.conf"
+
+# Populate values from options maps
+zm_db: "{{ zm_db_options[ansible_distribution_major_version] }}"
+zm_path_conf: "{{ zm_path_conf_options[ansible_distribution_major_version] }}"
+```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- hosts: all
+  roles:
+    - name: "Ensure ZoneMinder"
+      role: ndobbs.ansible-role-zoneminder
+```
 
 License
 -------
@@ -35,7 +65,6 @@ BSD
 TODO
 ------------------
 Add SSL configuration support
-Add support for RHEL 7
 Add support for debian distros
 
 Author Information
